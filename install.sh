@@ -194,7 +194,12 @@ e "Installing $NAME $VER"
 # Fedora 17 fix
 [ -d "/etc/cron.d" ] || mkdir "/etc/cron.d"
 
-download http://configserver.com/free/csf.tgz "CSF Archive"
+if [ -f $DIR/csf.tgz ]; then
+	cp -r $DIR/csf.tgz $TMP
+else
+	download http://configserver.com/free/csf.tgz "CSF Archive"
+fi
+
 tar -xzf csf.tgz
 
 cd csf
