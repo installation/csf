@@ -9,7 +9,7 @@
 # Variable definitions
 DIR=$(cd `dirname $0` && pwd)
 NAME="ConfigServer Security & Firewall"
-$SLUG="csf"
+SLUG="csf"
 VER="6.33"
 DEPENDENCIES=("perl" "libgd-graph-perl" "tar")
 TMP="/tmp/$SLUG"
