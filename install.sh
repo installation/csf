@@ -188,17 +188,6 @@ init()
 	return 0
 }
 
-## Show progressbar
-progress()
-{
-	local progress=${1:-0}
-	local gauge="${2:-Please wait}"
-	local title="${3:-Installation progress}"
-
-	echo $progress | dialog --backtitle "Installing $NAME $VER" \
-	 --title "$title" --gauge "$gauge" 7 70 0
-}
-
 ## Cleanup files
 cleanup()
 {
