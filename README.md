@@ -27,3 +27,8 @@ Dependencies will be installed during the progress, but installing them on your 
 
 * Download and run ````install.sh````
 * Log in to Webmin and install the CSF module from /usr/local/csf/csfwebmin.tgz
+
+
+You may find some error messages in the log about ````apf````. If you don't know what apf is or you don't have apf installed just ignore these messages.
+
+For further info check [Official website](http://configserver.com/cp/csf.html)
