@@ -11,7 +11,7 @@ DIR=$(cd `dirname $0` && pwd)
 NAME="ConfigServer Security & Firewall"
 $SLUG="csf"
 VER="6.33"
-DEPENDENCIES=("perl" "tar")
+DEPENDENCIES=("perl" "libgd-graph-perl" "tar")
 TMP="/tmp/$SLUG"
 INSTALL_LOG="$TMP/install.log"
 ERROR_LOG="$TMP/error.log"
@@ -94,16 +94,6 @@ else
 	ee "No package manager found."
 fi
 
-## Check for init system (update-rc.d or chkconfig)
-e "Checking for init system..."
-if [ `which update-rc.d 2> /dev/null` ]; then
-	init="$(which update-rc.d)"
-elif [ `which chkconfig 2> /dev/null` ]; then
-	init="$(which chkconfig) --add"
-else
-	ee "Init system not found, service not started!"
-fi
-
 
 # Function definitions
 
@@ -135,34 +125,10 @@ download()
 	return 0
 }
 
-## Install init script
-init()
-{
-	if [ -z "$1" ]; then
-		e "No init script given" 31
-		return 1
-	else
-		$init "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during init"
-	fi
-
-	return 0
-}
-
-## Show progressbar
-progress()
-{
-	local progress=${1:-0}
-	local gauge="${2:-Please wait}"
-	local title="${3:-Installation progress}"
-
-	echo $progress | dialog --backtitle "Installing $NAME $VER" \
-	 --title "$title" --gauge "$gauge" 7 70 0
-}
-
 ## Cleanup files
 cleanup()
 {
-	rm -rf $TMP/supervisor* $TMP/setuptools*
+	rm -rf $TMP/csf*
 }
 
 
@@ -173,40 +139,21 @@ for dep in ${DEPENDENCIES[@]}; do
 	fi
 done
 
-echo -e "\033[34m###### Installing ConfigServer Security & Firewall 4.2 ######\033[0m"
+e "Installing $NAME $VER"
 
-install() {
-	cd /tmp
-	rm -rf csf.tgz
-	wget http://configserver.com/free/csf.tgz
-	tar -xzf csf.tgz
-	cd csf
-	sh install.sh
-	sh /etc/csf/remove_apf_bfd.sh
-	echo -e "\033[34m###### Checking installation ######\033[0m"
-	perl /etc/csf/csftest.pl
-	rm -rf csf.tgz
-	sudo apt-get install libgd-graph-perl
-}
+download http://configserver.com/free/csf.tgz "CSF Archive"
+tar -xzf csf.tgz
 
-uninstall() {
-	cd /etc/csf
-	sh uninstall.sh
-}
+sh csf/install.sh >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error installing $NAME $VER"
 
-case "$1" in
-	install)
-		install
-		;;
-	uninstall)
-		uninstall
-		;;
-	reinstall)
-		uninstall
-		install
-		;;
-	*)
-		echo "Usage: sudo ./csf.sh {install|uninstall|reinstall}" >&2
-		exit 1
-		;;
-esac
+e "Removing APF"
+sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error removing APF"
+
+e "Checking installation"
+perl /etc/csf/csftest.pl  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during test"
+
+if [ -s $ERROR_LOG ]; then
+	e "Error log is not empty. Please check $ERROR_LOG for further details." 31
+fi
+
+e "Installation done."
