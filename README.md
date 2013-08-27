@@ -26,4 +26,4 @@ Dependencies will be installed during the progress, but installing them on your 
 ## Installation
 
 * Download and run ````install.sh````
-* Log in to Webmin and install the CSF module from /etc/csf/webmin.tgz
+* Log in to Webmin and install the CSF module from /usr/local/csf/csfwebmin.tgz
