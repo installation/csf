@@ -1,9 +1,9 @@
 ConfigServer Security & Firewall install
 ========================================
 
-Install ConfigServer Security & Firewall on several Linux distributions with one script
+Install ConfigServer Security & Firewall
 
-* Installs all dependencies using apt or yum
+Installs all dependencies using apt or yum
 
 Tested on:
 * CentOS 5.8/6.4
@@ -20,13 +20,14 @@ By default, the installer logs into ````$TMP/install.log```` and ````$TMP/error.
 * HTTP Client (curl, wget or fetch)
 * TAR executable
 * Perl
+* Perl GD library (Debian/Ubuntu: libgd-graph-perl, RHEL: perl-GDGraph)
 
 Dependencies will be installed during the progress, but installing them on your own is advised.
 
 ## Installation
 
 * Download and run ````install.sh````
-* Log in to Webmin and install the CSF module from /usr/local/csf/csfwebmin.tgz
+* OPTIONAL: Log in to Webmin and install the CSF module from /usr/local/csf/csfwebmin.tgz
 
 ### Offline installation
 

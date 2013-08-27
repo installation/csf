@@ -168,7 +168,8 @@ download()
 ## Cleanup files
 cleanup()
 {
-	find $TMP/* -not -name '*.log' | xargs rm -rf
+	cd $TMP 2> /dev/null || return 1
+	find * -not -name '*.log' | xargs rm -rf
 }
 
 
