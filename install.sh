@@ -212,6 +212,9 @@ done
 
 e "Installing $NAME $VER"
 
+# Fedora 17 fix
+[ -d "/etc/cron.d" ] || mkdir "/etc/cron.d"
+
 download http://configserver.com/free/csf.tgz "CSF Archive"
 tar -xzf csf.tgz
 
