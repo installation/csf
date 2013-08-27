@@ -31,4 +31,4 @@ Dependencies will be installed during the progress, but installing them on your 
 
 You may find some error messages in the log about ````apf````. If you don't know what apf is or you don't have apf installed just ignore these messages.
 
-For further info check [Official website](http://configserver.com/cp/csf.html)
+For further info check [Official website](http://configserver.com/cp/csf.html) or [Installation notes](http://configserver.com/free/csf/install.txt)

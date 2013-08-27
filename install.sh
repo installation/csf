@@ -87,13 +87,34 @@ fi
 ## Check for package manager (apt or yum)
 e "Checking for package manager..."
 if [ `which apt-get 2> /dev/null` ]; then
-	install="$(which apt-get) -y --force-yes install"
-	DEPENDENCIES+=("libgd-graph-perl")
+	install[0]="apt"
+	install[1]="$(which apt-get) -y --force-yes install"
 elif [ `which yum 2> /dev/null` ]; then
-	install="$(which yum) -y install"
-	DEPENDENCIES+=("perl-GDGraph")
+	install[0]="yum"
+	install[1]="$(which yum) -y install"
 else
 	ee "No package manager found."
+fi
+
+## Check for package manager (dpkg or rpm)
+if [ `which dpkg 2> /dev/null` ]; then
+	install[2]="dpkg"
+	install[3]="$(which dpkg)"
+elif [ `which rpm 2> /dev/null` ]; then
+	install[2]="rpm"
+	install[3]="$(which rpm)"
+else
+	ee "No package manager found."
+fi
+
+## Check for init system (update-rc.d or chkconfig)
+e "Checking for init system..."
+if [ `which update-rc.d 2> /dev/null` ]; then
+	init="$(which update-rc.d)"
+elif [ `which chkconfig 2> /dev/null` ]; then
+	init="$(which chkconfig) --add"
+else
+	ee "Init system not found, service not started!"
 fi
 
 
@@ -107,11 +128,38 @@ install()
 		return 1
 	else
 		e "Installing package: $1"
-		$install "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during install $1"
+		${install[1]} "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during install $1"
 		e "Package $1 successfully installed"
 	fi
 
 	return 0
+}
+
+## Check installed package
+check()
+{
+	if [ -z "$1" ]; then
+		e "Package not given" 31
+		return 2
+	else
+		case ${install[2]} in
+			dpkg )
+				${install[3]} -s "$1" &> /dev/null
+				;;
+			rpm )
+				${install[3]} -qa | grep "$1"  &> /dev/null
+				;;
+		esac
+		return $?
+	fi
+}
+
+## Add dependency
+dep()
+{
+	if [ ! -z "$1" ]; then
+		DEPENDENCIES+=("$1")
+	fi
 }
 
 ## Download required file
@@ -127,18 +175,49 @@ download()
 	return 0
 }
 
+## Install init script
+init()
+{
+	if [ -z "$1" ]; then
+		e "No init script given" 31
+		return 1
+	else
+		$init "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during init"
+	fi
+
+	return 0
+}
+
+## Show progressbar
+progress()
+{
+	local progress=${1:-0}
+	local gauge="${2:-Please wait}"
+	local title="${3:-Installation progress}"
+
+	echo $progress | dialog --backtitle "Installing $NAME $VER" \
+	 --title "$title" --gauge "$gauge" 7 70 0
+}
+
 ## Cleanup files
 cleanup()
 {
-	rm -rf $TMP/csf*
+	find $TMP/* -not -name '*.log' | xargs rm -rf
 }
 
+case ${install[2]} in
+	dpkg )
+		dep "libgd-graph-perl"
+		;;
+	rpm )
+		dep "perl-GDGraph"
+		;;
+esac
 
 # Checking dependencies
 for dep in ${DEPENDENCIES[@]}; do
-	if [ ! $(which $dep 2> /dev/null) ]; then
-		install "$dep"
-	fi
+	check "$dep"
+	[ $? -eq 0 ] || install "$dep"
 done
 
 e "Installing $NAME $VER"
