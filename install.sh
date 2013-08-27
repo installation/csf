@@ -160,4 +160,7 @@ if [ -s $ERROR_LOG ]; then
 	e "Error log is not empty. Please check $ERROR_LOG for further details." 31
 fi
 
+e "Cleaning up"
+cleanup
+
 e "Installation done."
