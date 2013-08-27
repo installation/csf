@@ -52,6 +52,14 @@ log()
 	echo "$1" >> "$log"
 }
 
+## Add dependency
+dep()
+{
+	if [ ! -z "$1" ]; then
+		DEPENDENCIES+=("$1")
+	fi
+}
+
 
 # Checking root access
 if [ $EUID -ne 0 ]; then
@@ -79,7 +87,7 @@ elif [ `which wget 2> /dev/null` ]; then
 elif [ `which fetch 2> /dev/null` ]; then
 	download="$(which fetch)"
 else
-	DEPENDENCIES+=("wget")
+	dep "wget"
 	download="$(which wget) --no-certificate"
 	e "No HTTP client found, wget added to dependencies" 31
 fi
@@ -154,14 +162,6 @@ check()
 	fi
 }
 
-## Add dependency
-dep()
-{
-	if [ ! -z "$1" ]; then
-		DEPENDENCIES+=("$1")
-	fi
-}
-
 ## Download required file
 download()
 {
@@ -194,6 +194,8 @@ cleanup()
 	find $TMP/* -not -name '*.log' | xargs rm -rf
 }
 
+
+# Adding dependencies
 case ${install[2]} in
 	dpkg )
 		dep "libgd-graph-perl"
