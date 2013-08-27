@@ -9,7 +9,7 @@ Tested on:
 * CentOS 5.8/6.4
 * Debian 6.0/7.0
 * Fedora 17
-* Ubuntu 10.04/12.04/12.10/13.04
+* Ubuntu 10.04/12.04/12.10
 
 Default temp dir is ````/tmp/csf````, this can be changed in install script.
 
