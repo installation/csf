@@ -210,6 +210,7 @@ case ${install[2]} in
 		dep "libgd-graph-perl"
 		;;
 	rpm )
+		dep "perl-libwww-perl"
 		dep "perl-GDGraph"
 		;;
 esac
