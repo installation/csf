@@ -156,11 +156,11 @@ sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error remov
 e "Checking installation"
 perl /etc/csf/csftest.pl  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during test"
 
+e "Cleaning up"
+cleanup
+
 if [ -s $ERROR_LOG ]; then
 	e "Error log is not empty. Please check $ERROR_LOG for further details." 31
 fi
-
-e "Cleaning up"
-cleanup
 
 e "Installation done."
