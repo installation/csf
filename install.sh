@@ -144,7 +144,9 @@ e "Installing $NAME $VER"
 download http://configserver.com/free/csf.tgz "CSF Archive"
 tar -xzf csf.tgz
 
-sh csf/install.sh >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error installing $NAME $VER"
+cd csf
+sh install.sh >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error installing $NAME $VER"
+cd ..
 
 e "Removing APF"
 sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error removing APF"
