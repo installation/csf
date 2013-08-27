@@ -11,7 +11,7 @@ DIR=$(cd `dirname $0` && pwd)
 NAME="ConfigServer Security & Firewall"
 SLUG="csf"
 VER="6.33"
-DEPENDENCIES=("perl" "libgd-graph-perl" "tar")
+DEPENDENCIES=("perl" "tar")
 TMP="/tmp/$SLUG"
 INSTALL_LOG="$TMP/install.log"
 ERROR_LOG="$TMP/error.log"
@@ -88,8 +88,10 @@ fi
 e "Checking for package manager..."
 if [ `which apt-get 2> /dev/null` ]; then
 	install="$(which apt-get) -y --force-yes install"
+	DEPENDENCIES+=("libgd-graph-perl")
 elif [ `which yum 2> /dev/null` ]; then
 	install="$(which yum) -y install"
+	DEPENDENCIES+=("perl-GDGraph")
 else
 	ee "No package manager found."
 fi
