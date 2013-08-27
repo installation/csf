@@ -1,5 +1,5 @@
-ConfigServer Security & Firewall install
-========================================
+ConfigServer Security & Firewall
+================================
 
 Install ConfigServer Security & Firewall
 
