@@ -122,7 +122,7 @@ fi
 install()
 {
 	if [ -z "$1" ]; then
-		e "Package not given" 31
+		e "No package passed" 31
 		return 1
 	else
 		e "Installing package: $1"
@@ -137,7 +137,7 @@ install()
 check()
 {
 	if [ -z "$1" ]; then
-		e "Package not given" 31
+		e "No package passed" 31
 		return 2
 	else
 		case ${install[2]} in
@@ -156,7 +156,7 @@ check()
 download()
 {
 	if [ -z "$1" ]; then
-		e "No download given" 31
+		e "No download passed" 31
 		return 1
 	else
 		$download "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Downloading $2 failed"
