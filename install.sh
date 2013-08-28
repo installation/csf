@@ -198,20 +198,20 @@ e "Installing $NAME $VER"
 if [ -f $DIR/csf.tgz ]; then
 	cp -r $DIR/csf.tgz $TMP
 else
-	download http://configserver.com/free/csf.tgz "CSF Archive"
+	download http://configserver.com/free/csf.tgz "CSF files"
 fi
 
-tar -xzf csf.tgz
+tar -xzf csf.tgz >> $INSTALL_LOG 2>> $ERROR_LOG
 
 cd csf
-sh install.sh >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error installing $NAME $VER"
+sh install.sh >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Installing $NAME $VER failed"
 cd ..
 
 e "Removing APF"
-sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error removing APF"
+sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Removing APF failed"
 
 e "Checking installation"
-perl /etc/csf/csftest.pl  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during test"
+perl /etc/csf/csftest.pl  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Test failed"
 
 e "Cleaning up"
 cleanup
