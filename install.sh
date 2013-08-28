@@ -126,7 +126,7 @@ install()
 		return 1
 	else
 		e "Installing package: $1"
-		${install[1]} "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during install $1"
+		${install[1]} "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Installing $1 failed"
 		e "Package $1 successfully installed"
 	fi
 
@@ -159,7 +159,7 @@ download()
 		e "No download given" 31
 		return 1
 	else
-		$download "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Error during download $2"
+		$download "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Downloading $2 failed"
 	fi
 
 	return 0
