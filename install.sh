@@ -121,14 +121,11 @@ fi
 ## Install required packages
 install()
 {
-	if [ -z "$1" ]; then
-		e "No package passed" 31
-		return 1
-	else
-		e "Installing package: $1"
-		${install[1]} "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Installing $1 failed"
-		e "Package $1 successfully installed"
-	fi
+	[ -z "$1" ] && { e "No package passed" 31; return 1; }
+
+	e "Installing package: $1"
+	${install[1]} "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Installing $1 failed"
+	e "Package $1 successfully installed"
 
 	return 0
 }
@@ -136,35 +133,28 @@ install()
 ## Check installed package
 check()
 {
-	if [ -z "$1" ]; then
-		e "No package passed" 31
-		return 2
-	else
-		case ${install[2]} in
-			dpkg )
-				${install[3]} -s "$1" &> /dev/null
-				;;
-			rpm )
-				${install[3]} -qa | grep "$1"  &> /dev/null
-				;;
-		esac
-		return $?
-	fi
+	[ -z "$1" ] && { e "No package passed" 31; return 2; }
+
+	case ${install[2]} in
+		dpkg )
+			${install[3]} -s "$1" &> /dev/null
+			;;
+		rpm )
+			${install[3]} -qa | grep "$1"  &> /dev/null
+			;;
+	esac
+	return $?
 }
 
 ## Download required file
 download()
 {
-	if [ -z "$1" ]; then
-		e "No download passed" 31
-		return 1
-	else
-		local text="${2:-files}"
-		e "Downloading $text"
-		$download "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Downloading $text failed"
-		e "Downloading $text successfull"
-	fi
+	[ -z "$1" ] && { e "No package passed" 31; return 1; }
 
+	local text="${2:-files}"
+	e "Downloading $text"
+	$download "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Downloading $text failed"
+	e "Downloading $text successfull"
 	return 0
 }
 
