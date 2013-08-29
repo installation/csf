@@ -241,7 +241,6 @@ sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Removing AP
 e "Checking installation"
 perl /etc/csf/csftest.pl  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Test failed"
 
-e "Cleaning up"
 cleanup
 
 if [ -s $ERROR_LOG ]; then
