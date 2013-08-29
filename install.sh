@@ -154,7 +154,7 @@ download()
 	local text="${2:-files}"
 	e "Downloading $text"
 	$download "$1" >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Downloading $text failed"
-	e "Downloading $text successfull"
+	e "Downloading $text finished"
 	return 0
 }
 
@@ -183,7 +183,6 @@ for dep in ${DEPENDENCIES[@]}; do
 	[ $? -eq 0 ] || install "$dep"
 done
 
-e "Installing $NAME $VER"
 
 # Fedora 17 fix
 [ -d "/etc/cron.d" ] || mkdir "/etc/cron.d"
@@ -194,11 +193,12 @@ else
 	download http://configserver.com/free/csf.tgz "CSF files"
 fi
 
+e "Installing $NAME $VER"
+
 tar -xzf csf.tgz >> $INSTALL_LOG 2>> $ERROR_LOG
 
 cd csf
 sh install.sh >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Installing $NAME $VER failed"
-cd ..
 
 e "Removing APF"
 sh /etc/csf/remove_apf_bfd.sh  >> $INSTALL_LOG 2>> $ERROR_LOG || ee "Removing APF failed"
